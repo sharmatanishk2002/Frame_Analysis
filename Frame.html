@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moment Distribution Calculator</title>
+    <link rel="stylesheet" href="Frame.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Moment Distribution Method Calculator</h1>
+        <form id="momentForm">
+            <label for="beams">Enter Lengths of Beams:</label>
+            <input type="text" id="beams" placeholder="e.g., 3, 5, 3 (in m)">
+
+            <label for="columns">Enter Length of Top & Bottom Columns:</label>
+            <input type="text" id="columns" placeholder="e.g., 3, 3 (in m)">
+            
+            <label for="udl">Enter UDL's on Beams:</label>
+            <input type="text" id="udl" placeholder="e.g., 5, 6, 5 (in kN/m)">
+            
+            <label for="columns">Enter Number of Columns (Between Beams):</label>
+            <input type="number" id="column_no" min="0" max="5">
+            
+            <button type="submit">Calculate</button>
+        </form>
+        <div id="results"></div>
+    </div>
+    <script src="Frame.js"></script>
+</body>
+</html>
