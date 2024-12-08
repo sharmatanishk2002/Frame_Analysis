@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Info</title>
+    <link rel="stylesheet" href="frame-analysis.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Frame Analysis Tool</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="test.html">Desk</a></li>
+                <li><a href="columninfo.html">Column Info</a></li>
+                <li><a href="beaminfo.html">Beam Info</a></li>
+                <li><a href="wallinfo.html">Wall Info</a></li>
+                <li><a href="loadinfo.html">Load Info</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Load Information</h2>
+            <form id="loadForm" action="store_load_data.php" method="POST">
+                <div id="beamLoadContainer"></div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        
+        // Retrieve the 'beamData' from local storage
+        let beamInfo = localStorage.getItem('beamData');
+        // Check if the data exists in local storage
+        if (beamInfo) {
+            // Parse the string back into an object
+            let beamData = JSON.parse(beamInfo);
+            
+            // Extract the beam info
+            var numBeams = beamData.beamNum; // Number of beams
+            
+        } else {
+            console.log("No beam data found in local storage.");
+        }
+        
+        // Create array for number of  beams
+        let beamNumbers = [];
+        
+        // Function to populate the array
+        function populateArray(inputNumber) {
+            if (typeof inputNumber !== "number" || inputNumber <= 0) {
+                console.error("Please enter a positive integer.");
+                return;
+            }
+            
+            // Clear the existing array 
+            beamNumbers = [];
+
+            // Add numbers from 1 to inputNumber into the array
+            for (let i = 1; i <= inputNumber; i++) {
+                beamNumbers.push(i);
+            }
+
+            console.log("Array populated:", beamNumbers);
+        }
+        
+        // Call Function
+        populateArray(numBeams); // Output: [1, 2, 3]
+
+        const beamLoadContainer = document.getElementById("beamLoadContainer");
+        const loadForm = document.getElementById("loadForm");
+        
+        // Generate load input sections for each beam
+        beamNumbers.forEach(beam => {
+            const section = document.createElement("div");
+            section.className = "form-group";
+            section.innerHTML = `
+            <h3>Beam ${beam}</h3>
+            <label>Is there any load on this beam?</label>
+            <select id="loadPresence${beam}" name="loadPresence${beam}">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+                </select>
+                <div id="loadDetails${beam}" style="display: none;">
+                    <div class="form-group">
+                        <label>Apply infill walls load?</label>
+                        <select id="infillWalls${beam}" name="infillWalls${beam}">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                        <label>Apply self-weight of beam?</label>
+                        <select id="selfWeight${beam}" name="selfWeight${beam}">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                                <label>UDL on Beam (kN/m):</label>
+                                <input type="number" id="udl${beam}" name="udl${beam}" step="0.1" min="0">
+                                <label>Length of UDL (m):</label>
+                                <input type="number" id="udlLength${beam}" name="udlLength${beam}" step="0.1" min="0">
+                                <label>Starting Position from Left Column (m):</label>
+                                <input type="number" id="udlStart${beam}" name="udlStart${beam}" step="0.1" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Point Load Present?</label>
+                                    <select id="pointLoadPresence${beam}" name="pointLoadPresence${beam}">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                        </select>
+                                        <div id="pointLoadDetails${beam}" style="display: none;">
+                                            <label>Point Load Value (kN):</label>
+                                            <input type="number" id="pointLoadValue${beam}" name="pointLoadValue${beam}" step="0.1" min="0">
+                                            <label>Position from Left Column (m):</label>
+                                            <input type="number" id="pointLoadPosition${beam}" name="pointLoadPosition${beam}" step="0.1" min="0">
+                                            </div>
+                                            </div>
+                </div>
+                `;
+            beamLoadContainer.appendChild(section);
+
+            // Add event listener to toggle load details
+            const loadPresenceSelect = document.getElementById(`loadPresence${beam}`);
+            loadPresenceSelect.addEventListener("change", () => {
+                const loadDetails = document.getElementById(`loadDetails${beam}`);
+                loadDetails.style.display = loadPresenceSelect.value === "yes" ? "block" : "none";
+            });
+            
+            // Add event listener to toggle point load details
+            const pointLoadSelect = document.getElementById(`pointLoadPresence${beam}`);
+            pointLoadSelect.addEventListener("change", () => {
+                const pointLoadDetails = document.getElementById(`pointLoadDetails${beam}`);
+                pointLoadDetails.style.display = pointLoadSelect.value === "yes" ? "block" : "none";
+            });
+        });
+        
+        // Highlight active section
+        function highlightSection(sectionId, isActive) {
+            const section = document.getElementById(sectionId);
+            if (isActive) {
+                section.style.backgroundColor = "#ffadadd4"; // Light pink for active
+                section.style.transition = "background-color 0.3s ease";
+            } else {
+                section.style.backgroundColor = "#ffffff"; // Default white
+            }
+        }
+
+        
+
+        // Function to toggle visibility and ensure only one section is open
+        function toggleBeamSection(currentBeam) {
+            beamNumbers.forEach(beam => {
+                const loadDetails = document.getElementById(`loadDetails${beam}`);
+                if (beam === currentBeam) {
+                    loadDetails.style.display = "block"; // Show current beam section
+                    highlightSection(`loadDetails${beam}`, true); // Highlight active section
+                } else {
+                    loadDetails.style.display = "none"; // Hide other sections
+                    highlightSection(`loadDetails${beam}`, false); // Remove highlight
+                }
+            });
+        }
+        
+        // Add event listener for highlighting and toggle visibility
+        beamNumbers.forEach(beam => {
+            const loadPresenceSelect = document.getElementById(`loadPresence${beam}`);
+            const isActive = loadPresenceSelect.value === "yes";
+            loadPresenceSelect.addEventListener("change", () => {
+                highlightSection(`loadDetails${beam}`, isActive);
+                
+                if (loadPresenceSelect.value === "yes") {
+                    toggleBeamSection(beam); // Open the selected beam's section and close others
+                } else {
+                    document.getElementById(`loadDetails${beam}`).style.display = "none"; // Hide if "No"
+                    highlightSection(`loadDetails${beam}`, false);
+                }
+            });
+        });
+        
+        
+        
+        // Populate form fields with stored data on page load
+        window.onload = function () {
+            const storedLoadData = localStorage.getItem("loadData");
+            
+            
+            if (storedLoadData) {
+                
+                // Add event listener for highlighting
+                console.log(beamNumbers);
+                beamNumbers.forEach(beam => {
+                    const loadPresenceSelect = document.getElementById(`loadPresence${beam}`);
+                    const isActive = "yes";
+                    
+                    highlightSection(`loadDetails${beam}`, isActive);                 
+                    
+                });
+                const loadData = JSON.parse(storedLoadData);
+                
+                // Loop through the stored data and populate fields
+                loadData.forEach(data => {
+                    if (data.loadPresence) {
+                        // Set the load presence to 'Yes'
+                        document.getElementById(`loadPresence${data.beam}`).value = "yes";
+                        document.getElementById(`loadDetails${data.beam}`).style.display = "block";
+                        
+                        // Populate infill wall and self-weight fields
+                    document.getElementById(`infillWalls${data.beam}`).value = data.infillWalls ? "yes" : "no";
+                    document.getElementById(`selfWeight${data.beam}`).value = data.selfWeight ? "yes" : "no";
+                    
+                    // Populate UDL fields
+                    document.getElementById(`udl${data.beam}`).value = data.udl;
+                    document.getElementById(`udlLength${data.beam}`).value = data.udlLength;
+                    document.getElementById(`udlStart${data.beam}`).value = data.udlStart;
+                    
+                    // Populate Point Load fields if present
+                    document.getElementById(`pointLoadPresence${data.beam}`).value = data.pointLoadPresence ? "yes" : "no";
+                    if (data.pointLoadPresence) {
+                        document.getElementById(`pointLoadDetails${data.beam}`).style.display = "block";
+                        document.getElementById(`pointLoadValue${data.beam}`).value = data.pointLoadValue;
+                        document.getElementById(`pointLoadPosition${data.beam}`).value = data.pointLoadPosition;
+                    }
+                } else {
+                    // Set the load presence to 'No'
+                    document.getElementById(`loadPresence${data.beam}`).value = "no";
+                    document.getElementById(`loadDetails${data.beam}`).style.display = "none";
+                }
+            });
+        }
+    };
+    
+    document.getElementById("loadinfo").addEventListener("click", function () {
+        // Open loadinfo.html in a new tab
+        window.open("inputresult.html", "_blank");
+    });
+    
+    // Handle form submission
+    loadForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        const loadData = beamNumbers.map(beam => {
+            const loadPresence = document.getElementById(`loadPresence${beam}`).value;
+            if (loadPresence === "no") return { beam, loadPresence: false };
+            
+            const infillWalls = document.getElementById(`infillWalls${beam}`).value === "yes";
+            const selfWeight = document.getElementById(`selfWeight${beam}`).value === "yes";
+            const udl = parseFloat(document.getElementById(`udl${beam}`).value) || 0;
+            const udlLength = parseFloat(document.getElementById(`udlLength${beam}`).value) || 0;
+            const udlStart = parseFloat(document.getElementById(`udlStart${beam}`).value) || 0;
+            const pointLoadPresence = document.getElementById(`pointLoadPresence${beam}`).value === "yes";
+            const pointLoadValue = pointLoadPresence
+            ? parseFloat(document.getElementById(`pointLoadValue${beam}`).value) || 0
+            : 0;
+            const pointLoadPosition = pointLoadPresence
+                ? parseFloat(document.getElementById(`pointLoadPosition${beam}`).value) || 0
+                : 0;
+                
+                return {
+                    beam,
+                    loadPresence: true,
+                    infillWalls,
+                    selfWeight,
+                    udl,
+                    udlLength,
+                    udlStart,
+                pointLoadPresence,
+                pointLoadValue,
+                pointLoadPosition
+            };
+        });
+        
+        alert("Load information collected successfully! Check console for details.");
+        
+        // Clear data before storage
+        localStorage.removeItem('loadData');
+
+        // Store updated data in local storage
+        localStorage.setItem("loadData", JSON.stringify(loadData));
+
+        
+    });
+
+    
+</script>
+
+</body>
+</html>

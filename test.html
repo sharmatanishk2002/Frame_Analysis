@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moment Calculation Model</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Frame Analysis Tool</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="test.html">Desk</a></li>
+                <li><a href="columninfo.html">Column Info</a></li>
+                <li><a href="beaminfo.html">Beam Info</a></li>
+                <li><a href="wallinfo.html">Wall Info</a></li>
+                <li><a href="loadinfo.html">Load Info</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Welcome to the Frame Analysis Tool</h2>
+            <p>Effortlessly calculate moments for frames with our easy-to-use tool. Start a new project or access specific sections below.</p>
+            <button onclick="startNewProject()">Start New Project</button>
+        </section>
+
+        <section class="info-sections">
+            <div class="card" id="column-info">
+                <h3>Column Info</h3>
+                <p>Enter the details about columns in your frame structure.</p>
+                <button onclick="navigateTo('columninfo.html')">Go to Column Info</button>
+            </div>
+            <div class="card" id="beam-info">
+                <h3>Beam Info</h3>
+                <p>Provide beam information for accurate moment calculation.</p>
+                <button onclick="navigateTo('beaminfo.html')">Go to Beam Info</button>
+            </div>
+            <div class="card" id="wall-info">
+                <h3>Wall Info</h3>
+                <p>Add wall details for a comprehensive frame analysis.</p>
+                <button onclick="navigateTo('wallinfo.html')">Go to Wall Info</button>
+            </div>
+            <div class="card" id="load-info">
+                <h3>Load Info</h3>
+                <p>Define the loads acting on the frame.</p>
+                <button onclick="navigateTo('loadinfo.html')">Go to Load Info</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 Frame Analysis Tool | Designed for Efficient Structural Analysis</p>
+    </footer>
+</body>
+</html>

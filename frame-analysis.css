@@ -1,0 +1,208 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Global Layout */
+.container {
+    width: 85%; /* Covers 85% of screen width */
+    max-width: 1400px;
+    margin: 2em auto;
+    padding: 2em;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+/* Header Styling */
+header {
+    background-color: #2b3e50;
+    color: #ffffff;
+    padding: 1.5em 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+header .logo h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 2em;
+    margin-top: 1em;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 0.5em;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #ffc107;
+    color: #2b3e50;
+}
+
+/* Form Sections */
+.form-section h2 {
+    color: #2b3e50;
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+/* Adjustments for Beam and Column Info Forms */
+#columnForm .form-group, #beamForm .form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start; /* Align items horizontally */
+    gap: 1em;
+    flex-wrap: wrap;
+}
+
+#columnForm .form-group label, #beamForm .form-group label {
+    font-weight: 500;
+    font-size: 1rem;
+    min-width: 150px; /* Ensure consistent label width */
+    text-align: right;
+}
+
+input[type="number"], select, textarea {
+    padding: 0.8em;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    flex: 1 1 200px; /* Inputs have a flexible width */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+input[type="number"]:focus {
+    outline: none;
+    border-color: #2b3e50;
+    box-shadow: 0 0 8px rgba(43, 62, 80, 0.2);
+}
+
+/* Layout for Starting Elements in Beam and Column Info */
+#columnForm .form-group:first-of-type, 
+#columnForm .form-group:nth-of-type(2), 
+#beamForm .form-group:first-of-type, 
+#beamForm .form-group:nth-of-type(2) {
+    flex: 1 1 calc(50% - 1em); /* Display starting elements in one line */
+}
+
+/* Submit Button */
+button[type="submit"] {
+    align-self: center;
+    background-color: #2b3e50;
+    color: #ffffff;
+    padding: 0.8em 1.5em;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #1a2a3a;
+    transform: translateY(-3px);
+}
+
+/* Beam Info Page */
+#beamLengthsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    justify-content: space-between;
+}
+
+#beamLengthsContainer input {
+    flex: 1 1 calc(33% - 1em);
+    min-width: 200px;
+}
+
+/* Wall Info Page */
+#wallForm .beam-config-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    justify-content: space-between;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#wallForm .beam-config-container div {
+    flex: 1 1 calc(33% - 1em);
+    min-width: 250px;
+    background: #f9f9f9;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Load Info Page */
+#beamLoadContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    justify-content: space-between;
+}
+
+#beamLoadContainer div {
+    flex: 1 1 calc(33% - 1em);
+    min-width: 250px;
+    padding: 1em;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#beamLoadContainer div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: auto;
+    padding: 1em 0;
+    background-color: #2b3e50;
+    color: #ffffff;
+    font-size: 0.9rem;
+}

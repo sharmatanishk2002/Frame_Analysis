@@ -1,0 +1,187 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+    overflow-x: hidden;
+}
+
+/* Header Styling */
+header {
+    background-color: #3a3a8c;
+    color: #ffffff;
+    padding: 1.5em 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header .logo h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 2em;
+    margin-top: 0.5em;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    position: relative;
+    padding: 0.5em 0;
+}
+
+nav ul li a::after {
+    content: '';
+    width: 0;
+    height: 2px;
+    background-color: #ffd700;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after {
+    width: 50%;
+}
+
+/* Hero Section */
+.hero {
+    background-color: #edf2f7;
+    padding: 3em 1em;
+    text-align: center;
+    border-bottom: 5px solid #3a3a8c;
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1em;
+    color: #3a3a8c;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2em;
+    color: #555;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero button {
+    background-color: #ffd700;
+    color: #3a3a8c;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.8em 2em;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.hero button:hover {
+    background-color: #ffbb00;
+    transform: translateY(-3px);
+}
+
+/* Info Sections */
+.info-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5em;
+    padding: 3em 1em;
+}
+
+.card {
+    background: #ffffff;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1em;
+    color: #3a3a8c;
+}
+
+.card p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 1.5em;
+}
+
+.card button {
+    background-color: #3a3a8c;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.7em 1.5em;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.card button:hover {
+    background-color: #29296e;
+    transform: translateY(-3px);
+}
+
+/* Footer Styling */
+footer {
+    background-color: #3a3a8c;
+    color: #ffffff;
+    padding: 1.5em 0;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 2em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header .logo h1 {
+        font-size: 2rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 1em;
+    }
+
+    .hero h2 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanishk Don</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Moment Distribution Method Calculator</h1>
+        <form id="momentForm">
+            <label for="beams">Enter Lengths of Beams:</label>
+            <input type="text" id="beams" placeholder="e.g., 3 5 3 (in m)">
+
+            <label for="columns">Enter Length of Top & Bottom Columns:</label>
+            <input type="text" id="columns" placeholder="e.g., 3 3 (in m)">
+
+            <label for="walls">Enter Heigth and Thickness of Wall:</label>
+            <input type="text" id="walls" placeholder="e.g. 2.5 20 (in m cm)">
+            
+            <label for="udl">Enter UDL's on Beams:</label>
+            <input type="text" id="udl" placeholder="e.g. 5 6 5 (in kN/m)">
+
+            <label for="pointload">Enter Point Loads(PLs) on Beams:</label>
+            <input type="text" id="pointload" placeholder="e.g. 6 5 5 6 (in kN)">
+
+            <label for="plbeamno">Enter Beam Number on which PLs are acting:</label>
+            <input type="text" id="plbeamno" placeholder="e.g. 1 2 2 3">
+            
+            <label for="valueofa">Enter the Distance of PL from left Column of beam:</label>
+            <input type="text" id="valueofa" placeholder="e.g. 2 2 4 1 (in m)">
+            
+            <label for="columns">Enter Number of Columns (Between Beams):</label>
+            <input type="number" id="column_no" min="0" placeholder="e.g. 4">
+
+            <label for="no_of_round">Enter Number of iterations:</label>
+            <input type="number" id="no_of_round" min="10" max="20" placeholder="Enter No. of times, distribution repeated. e.g., 10">
+            
+            <button type="submit">Calculate</button>
+        </form>
+        <div class="footer">
+            <button id = "columninfo">Open New Page</button>
+        </div>
+        <div id="results"></div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>

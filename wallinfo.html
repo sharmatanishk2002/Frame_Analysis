@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall Info</title>
+    <link rel="stylesheet" href="frame-analysis.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Frame Analysis Tool</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="test.html">Desk</a></li>
+                <li><a href="columninfo.html">Column Info</a></li>
+                <li><a href="beaminfo.html">Beam Info</a></li>
+                <li><a href="wallinfo.html">Wall Info</a></li>
+                <li><a href="loadinfo.html">Load Info</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="form-section">
+            <h2>Wall Information</h2>
+            <form id="wallForm">
+                <div id="beamConfigContainer" class="beam-config-container"></div>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        
+    </div>
+    <script>
+        const beamConfigContainer = document.getElementById("beamConfigContainer");
+        const wallForm = document.getElementById("wallForm");
+    
+        // Retrieve the 'beamData' from local storage
+        let beamInfo = localStorage.getItem('beamData');
+        if (beamInfo) {
+            let beamData = JSON.parse(beamInfo);
+            var numBeams = beamData.beamNum;  // Number of beams
+            var beamDepth = beamData.beamDepth; // m
+            var beamLengths = beamData.beamLengths; // Center-to-center lengths for beams
+        } else {
+            console.log("No beam data found in local storage.");
+        }
+    
+        // Retrieve the 'columnData' from local storage
+        let columnInfo = localStorage.getItem('columnData');
+        if (columnInfo) {
+            let columnData = JSON.parse(columnInfo);
+            var centerToCenterHeight = columnData.abovecolumnLength; // m
+            var columnWidth = columnData.columnWidth; // m
+        } else {
+            console.log("No column data found in local storage.");
+        }
+    
+        // Generate beam configurations dynamically based on the predefined number of beams
+        document.addEventListener("DOMContentLoaded", () => {
+            for (let i = 1; i <= numBeams; i++) {
+                const beamDiv = document.createElement("div");
+                beamDiv.className = "form-group";
+    
+                // Checkbox for wall presence
+                const wallCheckbox = document.createElement("input");
+                wallCheckbox.type = "checkbox";
+                wallCheckbox.id = `beamWall${i}`;
+                wallCheckbox.name = `beamWall${i}`;
+    
+                const wallLabel = document.createElement("label");
+                wallLabel.textContent = `Beam ${i}:`;
+                wallLabel.htmlFor = `beamWall${i}`;
+                wallLabel.style.marginRight = "10px";
+    
+                // Dropdown for wall type
+                const wallTypeSelect = document.createElement("select");
+                wallTypeSelect.id = `wallTypeBeam${i}`;
+                wallTypeSelect.name = `wallTypeBeam${i}`;
+                wallTypeSelect.disabled = true;
+                wallTypeSelect.innerHTML = ` 
+                    <option value="single">Single Brick</option>
+                    <option value="double">Double Brick</option>
+                `;
+    
+                // Enable/Disable dropdown based on checkbox
+                wallCheckbox.addEventListener("change", () => {
+                    wallTypeSelect.disabled = !wallCheckbox.checked;
+                });
+    
+                // Append elements to the container
+                beamDiv.appendChild(wallLabel);
+                beamDiv.appendChild(wallCheckbox);
+                beamDiv.appendChild(wallTypeSelect);
+                beamConfigContainer.appendChild(beamDiv);
+            }
+    
+            // Load previously stored wall data
+            loadWallData();
+        });
+    
+        // Load previously stored wall data into the form
+        function loadWallData() {
+            const wallData = JSON.parse(localStorage.getItem("wallData") || "[]");
+            wallData.forEach((wall) => {
+                const checkbox = document.getElementById(`beamWall${wall.wallNumber}`);
+                const dropdown = document.getElementById(`wallTypeBeam${wall.wallNumber}`);
+                if (checkbox && dropdown) {
+                    checkbox.checked = true;
+                    dropdown.disabled = false;
+                    dropdown.value = wall.thickness === 0.1 ? "single" : "double";
+                }
+            });
+        }
+
+         
+        //Function to calculate UDL on a beam due to a wall above it         
+        function calculateUDL(width, height, density) {
+            // Area of the wall in square meters
+            const wallArea = width * height;
+
+            // Total weight of the wall in kN
+            const wallWeight = wallArea * density;
+
+            return wallWeight;
+        }
+
+            
+        // Handle form submission
+        wallForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const wallData = [];
+            for (let i = 1; i <= numBeams; i++) {
+                const hasWall = document.getElementById(`beamWall${i}`).checked;
+                console.log(hasWall);
+                if (!hasWall) continue;
+                console.log(`Executed`);
+                
+                const wallType = document.getElementById(`wallTypeBeam${i}`).value;
+    
+                // Calculate wall properties
+                const cToCBeamLength = beamLengths[i - 1] || 0; // Use the beam length from the array
+                const wallLength = cToCBeamLength - columnWidth;
+    
+                // Determine wall thickness
+                const wallThickness = wallType === "single" ? 0.1 : 0.2;
+    
+                // Wall height
+                const wallHeight = centerToCenterHeight - beamDepth;
+
+                let wallUDL = calculateUDL(wallThickness, wallHeight, 20) //Added wall udl 
+    
+                wallData.push({
+                    wallNumber: i,
+                    hasWall: hasWall, // return true or false
+                    thickness: wallThickness,
+                    height: wallHeight.toFixed(2), 
+                    length: wallLength.toFixed(2), 
+                    wallUDL: wallUDL.toFixed(2) 
+                });
+            }
+    
+            // Clear data before storage
+            localStorage.removeItem('wallData');
+    
+            // Store result in local storage
+            localStorage.setItem("wallData", JSON.stringify(wallData));
+            alert(localStorage.getItem('wallData'));
+        });
+    
+        // Open new window
+        document.getElementById("loadinfo").addEventListener("click", function () {
+            window.open("loadinfo.html", "_blank");
+        });
+    </script>    
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beam Info</title>
+    <link rel="stylesheet" href="frame-analysis.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Frame Analysis Tool</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="test.html">Desk</a></li>
+                <li><a href="columninfo.html">Column Info</a></li>
+                <li><a href="beaminfo.html">Beam Info</a></li>
+                <li><a href="wallinfo.html">Wall Info</a></li>
+                <li><a href="loadinfo.html">Load Info</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="form-section">
+            <h2>Beam Information</h2>
+            <form id="beamForm">
+                <div class="form-group">
+                    <label for="beamWidth">Width of Beam (m):</label>
+                    <input type="number" id="beamWidth" name="beamWidth" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="beamDepth">Depth of Beam (m):</label>
+                    <input type="number" id="beamDepth" name="beamDepth" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="numBeams">Number of Beams:</label>
+                    <input type="number" id="numBeams" name="numBeams" step="1" min="1" required>
+                </div>
+                
+                <div id="generateLengthInputs">Enter Beam Lengths in below Inputs</div>
+
+                <div id="beamLengthsContainer"></div>
+
+                <button type="submit">Submit</button>            
+            </form>
+        </div>
+       
+    </div>
+    <script>
+        const beamLengthsContainer = document.getElementById("beamLengthsContainer");
+        const beamForm = document.getElementById("beamForm");
+
+        // Load previously saved data if available
+        const savedBeamData = JSON.parse(localStorage.getItem("beamData"));
+        const savedColumnData = JSON.parse(localStorage.getItem("columnData"));
+        if (savedBeamData) {
+            document.getElementById("beamWidth").value = savedBeamData.beamWidth || '';
+            document.getElementById("beamDepth").value = savedBeamData.beamDepth || '';
+            document.getElementById("numBeams").value = (savedColumnData.numColumns-1) || '';
+
+            // Generate the beam lengths input fields
+            for (let i = 1; i <= savedColumnData.numColumns-1; i++) {
+                const div = document.createElement("div");
+                div.className = "form-group";
+
+                const label = document.createElement("label");
+                label.textContent = `Length of Beam ${i} (m):`;
+                label.htmlFor = `beamLength${i}`;
+
+                const input = document.createElement("input");
+                input.type = "number";
+                input.id = `beamLength${i}`;
+                input.name = `beamLength${i}`;
+                input.step = "0.1";
+                input.min = "0.5";
+                input.required = true;
+                input.value = savedBeamData.beamLengths[i - 1] || '';
+
+                div.appendChild(label);
+                div.appendChild(input);
+                beamLengthsContainer.appendChild(div);
+            }
+        }
+
+        // Event to dynamically generate inputs for beam lengths
+        function generateBeamInputs () {
+            const numBeams = parseInt(savedColumnData.numColumns-1);
+            if (isNaN(numBeams) || numBeams < 1) {
+                alert("Please enter a valid number of beams (greater than 0).");
+                return;
+            }
+
+            // Clear previous beam length inputs
+            beamLengthsContainer.innerHTML = "";
+
+            // Generate new input fields for beam lengths
+            for (let i = 1; i <= numBeams; i++) {
+                const div = document.createElement("div");
+                div.className = "form-group";
+
+                const label = document.createElement("label");
+                label.textContent = `Length of Beam ${i} (m):`;
+                label.htmlFor = `beamLength${i}`;
+
+                const input = document.createElement("input");
+                input.type = "number";
+                input.id = `beamLength${i}`;
+                input.name = `beamLength${i}`;
+                input.step = "0.1";
+                input.min = "0.5";
+                input.required = true;
+
+                div.appendChild(label);
+                div.appendChild(input);
+                beamLengthsContainer.appendChild(div);
+            }
+        };
+
+        generateBeamInputs();
+        
+        // Handle form submission
+        beamForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const beamWidth = parseFloat(document.getElementById("beamWidth").value);
+            const beamDepth = parseFloat(document.getElementById("beamDepth").value);
+            const numBeams = parseInt(savedColumnData.numColumns-1);
+
+            // Check if beam lengths have been generated
+            const lengthInputs = beamLengthsContainer.querySelectorAll("input");
+            if (lengthInputs.length === 0) {
+                alert("Please generate beam length inputs by clicking the 'Generate Beam Length Inputs' button before submitting.");
+                return;
+            }
+
+            // Validate and collect beam lengths
+            const beamLengths = [];
+            for (const input of lengthInputs) {
+                const length = parseFloat(input.value);
+                if (isNaN(length) || length <= 0) {
+                    alert("All beam lengths must be greater than 0. Please correct your input.");
+                    input.focus();
+                    return;
+                }
+                beamLengths.push(length);
+            }
+
+            // Store collected data in localStorage
+            const resultData = {
+                beamWidth: beamWidth.toFixed(2),
+                beamDepth: beamDepth.toFixed(2),
+                beamNum: numBeams,
+                beamLengths: beamLengths.map(len => len.toFixed(2))
+            };
+
+            localStorage.setItem("beamData", JSON.stringify(resultData));
+            alert("Beam data saved successfully!");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Column Info</title>
+    <link rel="stylesheet" href="frame-analysis.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Frame Analysis Tool</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="test.html">Desk</a></li>
+                <li><a href="columninfo.html">Column Info</a></li>
+                <li><a href="beaminfo.html">Beam Info</a></li>
+                <li><a href="wallinfo.html">Wall Info</a></li>
+                <li><a href="loadinfo.html">Load Info</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <div class="form-section">
+            <h2>Frame Column Information</h2>
+            <form id="columnForm">
+                <div class="form-group">
+                    <label for="numColumns">Number of Columns:</label>
+                    <input type="number" id="numColumns" name="numColumns" step="1" min="2" required>
+                </div>
+                <div class="form-group">
+                    <label for="abovecolumnLength">Length of above Column (m):</label>
+                    <input type="number" id="abovecolumnLength" name="columnLength" step="0.05" min="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="belowcolumnLength">Length of below Column (m):</label>
+                    <input type="number" id="belowcolumnLength" name="columnLength" step="0.05" min="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="columnWidth">Width of Column (m):</label>
+                    <input type="number" id="columnWidth" name="columnWidth" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="columnDepth">Depth of Column (m):</label>
+                    <input type="number" id="columnDepth" name="columnDepth" step="0.01" min="0.01" required>
+                </div>
+                <button type="submit">OK</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+         // Load data from localStorage if available and populate the form fields
+         window.addEventListener('load', () => {
+            const columnData = JSON.parse(localStorage.getItem('columnData'));
+            if (columnData) {
+                document.getElementById('numColumns').value = columnData.numColumns || '';
+                document.getElementById('abovecolumnLength').value = columnData.abovecolumnLength || '';
+                document.getElementById('belowcolumnLength').value = columnData.belowcolumnLength || '';
+                document.getElementById('columnWidth').value = columnData.columnWidth || '';
+                document.getElementById('columnDepth').value = columnData.columnDepth || '';
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('columnForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Convert all values to numbers using Number()
+            const numColumns = Number(document.getElementById('numColumns').value);
+            const abovecolumnLength = Number(document.getElementById('abovecolumnLength').value);
+            const belowcolumnLength = Number(document.getElementById('belowcolumnLength').value);
+            const columnWidth = Number(document.getElementById('columnWidth').value);
+            const columnDepth = Number(document.getElementById('columnDepth').value);
+
+            // Create an object to store the data
+            const resultData = {
+                numColumns: numColumns,
+                abovecolumnLength: abovecolumnLength,
+                belowcolumnLength: belowcolumnLength,
+                columnWidth: columnWidth,
+                columnDepth: columnDepth
+            };
+
+            // Clear data before storage
+            localStorage.removeItem('columnData');
+
+            // Store this object in local storage
+            localStorage.setItem("columnData", JSON.stringify(resultData));
+
+            alert(localStorage.getItem('columnData'));
+        });
+    </script>
+    
+    
+</body>
+</html>
